@@ -4,14 +4,15 @@ import torch.nn as nn
 import torch.nn.functional as functional
 from torch.autograd import Variable
 from torch.nn.init import xavier_normal
-from baseline_encoder import BaselineEncoder
-from baseline_decoder import BaselineDecoder
-from ...utils.batch_loader import BatchLoader
+
+from utils.batch_loader import BatchLoader
+from .baseline_encoder import BaselineEncoder
+from .baseline_decoder import BaselineDecoder
 
 
-class VAE(nn.Module):
+class BaselineVAE(nn.Module):
     def __init__(self, vocab_size, embed_size, latent_size, decoder_size, decoder_num_layers):
-        super(VAE, self).__init__()
+        super(BaselineVAE, self).__init__()
 
         self.latent_size = latent_size
         self.vocab_size = vocab_size

@@ -5,9 +5,8 @@ import torch
 from torch.autograd import Variable
 from six.moves import cPickle
 
-
 class BatchLoader:
-    def __init__(self, data_path='./data/ru.txt'):
+    def __init__(self, data_path='../data/huggingface-data.txt'):
         """
         :param data_path: string prefix to path of data folder
         :param force_preprocessing: whether to force data preprocessing
@@ -33,14 +32,15 @@ class BatchLoader:
         """
 
         data = open(self.data_path, 'r', encoding='utf-8').read()
-
+        
         self.vocab_size, self.idx_to_char, self.char_to_idx = self.build_vocab(data)
 
         self.max_seq_len = 209
         data = np.array([[self.char_to_idx[char] for char in line] for line in data.split('\n')[:-1]
-                         if 70 <= len(line) <= self.max_seq_len])
-
+                         if 1 <= len(line) <= self.max_seq_len])
+        
         self.valid_data, self.train_data = data[:self.split], data[self.split:]
+        print(self.train_data)
 
         self.data_len = [len(var) for var in [self.train_data, self.valid_data]]
 
@@ -53,7 +53,7 @@ class BatchLoader:
         # mappings itself
         idx_to_char = chars
         char_to_idx = {x: i for i, x in enumerate(idx_to_char)}
-
+        
         return chars_vocab_size, idx_to_char, char_to_idx
 
     def next_batch(self, batch_size, target: str, use_cuda=False):
@@ -105,7 +105,7 @@ class BatchLoader:
             decoder_target[i] += [self.char_to_idx[self.pad_token]] * to_add[i]
 
         result = [np.array(var) for var in [encoder_input, decoder_input, decoder_target]]
-        result = [Variable(toorch.from_numpy(var)).long() for var in result]
+        result = [Variable(torch.from_numpy(var)).long() for var in result]
         if use_cuda:
             result = [var.cuda() for var in result]
 
