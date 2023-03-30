@@ -11,3 +11,7 @@ def get_precision_recall_metrics(real_preds, sample_preds):
     precision, recall, _ = precision_recall_curve([0] * len(real_preds) + [1] * len(sample_preds), real_preds + sample_preds)
     pr_auc = auc(recall, precision)
     return precision.tolist(), recall.tolist(), float(pr_auc)
+
+## write function to save plots of AUC of the ROC and save in figs folder
+def save_roc_plots():
+    return NotImplemented()
