@@ -55,7 +55,7 @@ class BaselineVAE(nn.Module):
             if encoder_input.is_cuda:
                 z = z.cuda()
             z = z * std + mu
-            z = F.dropout(z, drop_prob, training=True)
+            z = functional.dropout(z, drop_prob, training=True)
 
             kld = (-0.5 * torch.sum(logvar - torch.pow(mu, 2) - torch.exp(logvar) + 1, 1)).mean()
         else:

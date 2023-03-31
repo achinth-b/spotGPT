@@ -43,6 +43,7 @@ def baseline_test_rvae_to_GPT():
 
         logits = logits.view(-1, batch_loader.vocab_size)
         cross_entropy = F.cross_entropy(logits, target, size_average=False)
+        
 
         aux_logits = aux_logits.view(-1, batch_loader.vocab_size)
         aux_cross_entropy = F.cross_entropy(aux_logits, target, size_average=False)
@@ -54,7 +55,7 @@ def baseline_test_rvae_to_GPT():
         optimizer.step()
 
         '''Validation'''
-        input, decoder_input, target = batch_loader.next_batch(30, 'valid', False)
+        input, decoder_input, target = batch_loader.next_batch(20, 'valid', False)
         target = target.view(-1)
 
         logits, aux_logits, valid_kld = vae(0.12, input, decoder_input)
@@ -73,15 +74,17 @@ def baseline_test_rvae_to_GPT():
             print(iteration)
             print('|--------ce------aux-ce-----kld--------|')
             print('|----------------train-----------------|')
-            print(cross_entropy.data.cpu().numpy()[0]/(210 * 30),
-                  aux_cross_entropy.data.cpu().numpy()[0]/(210 * 30),
-                  kld.data.cpu().numpy()[0])
+            print(cross_entropy.data.cpu().numpy()/(210 * 30),
+                  aux_cross_entropy.data.cpu().numpy()/(210 * 30),
+                  kld.data.cpu().numpy())
             print('|----------------valid-----------------|')
-            print(valid_cross_entropy.data.cpu().numpy()[0]/(210 * 30),
-                  valid_aux_cross_entropy.data.cpu().numpy()[0]/(210 * 30),
-                  valid_kld.data.cpu().numpy()[0])
+            print(valid_cross_entropy.data.cpu().numpy()/(210 * 30),
+                  valid_aux_cross_entropy.data.cpu().numpy()/(210 * 30),
+                  valid_kld.data.cpu().numpy())
             print('|--------------------------------------|')
             input, _, _ = batch_loader.next_batch(2, 'valid', False)
+            print(input)
+            print(input[0].unsqueeze(1))
             mu, logvar = vae.inference(input[0].unsqueeze(1))
             std = torch.exp(0.5 * logvar)
 

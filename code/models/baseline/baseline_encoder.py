@@ -11,7 +11,7 @@ class BaselineEncoder(nn.Module):
         self.latent_size = latent_size
 
         self.cnn = nn.Sequential(
-            nn.Conv1d(self.embed_size, 128, 4, 2),
+            nn.Conv1d(self.embed_size, 128, 3, 2, padding = 4),
             nn.BatchNorm1d(128),
             nn.ELU(),
 
@@ -46,6 +46,6 @@ class BaselineEncoder(nn.Module):
         Transpose input to the shape of [batch_size, embed_size, seq_len]
         '''
         input = torch.transpose(input, 1, 2)
-
+        print(input)
         result = self.cnn(input)
         return result.squeeze(2)

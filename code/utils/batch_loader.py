@@ -40,7 +40,6 @@ class BatchLoader:
                          if 1 <= len(line) <= self.max_seq_len])
         
         self.valid_data, self.train_data = data[:self.split], data[self.split:]
-        print(self.train_data)
 
         self.data_len = [len(var) for var in [self.train_data, self.valid_data]]
 
